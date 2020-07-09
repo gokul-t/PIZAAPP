@@ -5,7 +5,7 @@
  * You'll likely spend most of your time in this file.
  */
 import React from "react"
-import { createStackNavigator } from "@react-navigation/stack"
+import { createDrawerNavigator } from "@react-navigation/drawer"
 import { WelcomeScreen, DemoScreen, HomeScreen, PostsScreen } from "../screens"
 
 /**
@@ -20,30 +20,30 @@ import { WelcomeScreen, DemoScreen, HomeScreen, PostsScreen } from "../screens"
  *   https://reactnavigation.org/docs/params/
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
-export type PrimaryParamList = {
+export type SecondaryDrawerParamList = {
   welcome: undefined
   demo: undefined,
   home:undefined,
   posts:undefined
 }
 
-// Documentation: https://reactnavigation.org/docs/stack-navigator/
-const Stack = createStackNavigator<PrimaryParamList>()
+// Documentation: https://reactnavigation.org/docs/drawer-navigator/
+const Drawer = createDrawerNavigator<SecondaryDrawerParamList>()
 
-export function PrimaryNavigator() {
+export function SecondaryDrawerNavigator() {
   return (
-    <Stack.Navigator
+    <Drawer.Navigator
       screenOptions={{
         // headerShown: false,
         gestureEnabled: true,
       }}
       initialRouteName="home"
     >
-      <Stack.Screen name="welcome" component={WelcomeScreen} />
-      <Stack.Screen name="demo" component={DemoScreen} />
-      <Stack.Screen name="home" component={HomeScreen} />
-      <Stack.Screen name="posts" component={PostsScreen} />
-    </Stack.Navigator>
+      <Drawer.Screen name="welcome" component={WelcomeScreen} />
+      <Drawer.Screen name="demo" component={DemoScreen} />
+      <Drawer.Screen name="home" component={HomeScreen} />
+      <Drawer.Screen name="posts" component={PostsScreen} />
+    </Drawer.Navigator>
   )
 }
 

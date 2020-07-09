@@ -1,10 +1,10 @@
 import React, { FunctionComponent as Component, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { TextStyle, View, ViewStyle , TouchableOpacity} from "react-native"
-import { BulletItem, Header, Text, Screen } from "../components"
-// import { useNavigation } from "@react-navigation/native"
-import { useStores } from "../models"
-import { color, spacing } from "../theme"
+import { useNavigation } from "@react-navigation/native"
+import { BulletItem, Header, Text, Screen } from "../../components"
+import { useStores } from "../../models"
+import { color, spacing } from "../../theme"
 
 
 
@@ -33,7 +33,11 @@ export const HomeScreen: Component = observer(function HomeScreen() {
   // const { someStore, anotherStore } = useStores()
   // OR
   const rootStore = useStores()
-
+  // Pull in navigation via hook
+  const navigation = useNavigation()
+  const postScreen = (item) => navigation.navigate("posts",{
+    categoryId : item.id
+  })
   const fetchCategories = () => {
     return rootStore.categoryStore.getCategories()
   }
@@ -44,7 +48,7 @@ export const HomeScreen: Component = observer(function HomeScreen() {
     setRefreshing(false)
   })
 
-  const renderItem = (item) => <TouchableOpacity >
+  const renderItem = (item) => <TouchableOpacity key={item.id} onPress={()=>postScreen(item)}>
     <BulletItem text={item.name} />
   </TouchableOpacity>
 
@@ -59,8 +63,6 @@ export const HomeScreen: Component = observer(function HomeScreen() {
     return rootStore.categoryStore.categories.map(renderItem)
   }
 
-  // Pull in navigation via hook
-  // const navigation = useNavigation()
   return (
     <View style={FULL}>
       <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
