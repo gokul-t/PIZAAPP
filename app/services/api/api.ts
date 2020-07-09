@@ -1,7 +1,9 @@
 import { ApisauceInstance, create, ApiResponse } from "apisauce"
+import WPAPI from "wpapi";
 import { getGeneralApiProblem } from "./api-problem"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import * as Types from "./api.types"
+import * as Models from "../../models"
 
 /**
  * Manages all requests to the API.
@@ -11,7 +13,10 @@ export class Api {
    * The underlying apisauce instance which performs the requests.
    */
   apisauce: ApisauceInstance
-
+  /**
+   * The underlying WPAPI instrance which perform the requests
+   */
+  wp : WPAPI
   /**
    * Configurable options.
    */
@@ -42,7 +47,39 @@ export class Api {
         Accept: "application/json",
       },
     })
+    this.wp = new WPAPI({ endpoint: this.config.url });
   }
+
+    /**
+   * Gets a list of users.
+   */
+  async getCategories(): Promise<Types.GetCategoryResult> {
+    // make the api call
+
+    const convertCategory = raw => {
+      return {
+        id: String(raw.id),
+        name: raw.name,
+        count: raw.count,
+        description: raw.description,
+        link: raw.link,
+        slug: raw.slug,
+        taxonomy: raw.taxonomy,
+        parent : raw.parent
+      }
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const response = await this.wp.categories()
+      const rawCategories = response;
+      const resultCategories: Models.CategorySnapshot[] = rawCategories.map(convertCategory)
+      return { kind: "ok", categories: resultCategories }
+    } catch {
+      return { kind: "bad-data" }
+    }
+  }
+
 
   /**
    * Gets a list of users.

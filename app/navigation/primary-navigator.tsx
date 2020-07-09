@@ -5,8 +5,9 @@
  * You'll likely spend most of your time in this file.
  */
 import React from "react"
-import { createStackNavigator } from "@react-navigation/stack"
-import { WelcomeScreen, DemoScreen } from "../screens"
+// import { createStackNavigator } from "@react-navigation/stack"
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { WelcomeScreen, DemoScreen,HomeScreen } from "../screens"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -22,23 +23,26 @@ import { WelcomeScreen, DemoScreen } from "../screens"
  */
 export type PrimaryParamList = {
   welcome: undefined
-  demo: undefined
+  demo: undefined,
+  home:undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
-const Stack = createStackNavigator<PrimaryParamList>()
+const Drawer = createDrawerNavigator<PrimaryParamList>()
 
 export function PrimaryNavigator() {
   return (
-    <Stack.Navigator
+    <Drawer.Navigator
       screenOptions={{
-        headerShown: false,
+        // headerShown: false,
         gestureEnabled: true,
       }}
+      initialRouteName="home"
     >
-      <Stack.Screen name="welcome" component={WelcomeScreen} />
-      <Stack.Screen name="demo" component={DemoScreen} />
-    </Stack.Navigator>
+      <Drawer.Screen name="welcome" component={WelcomeScreen} />
+      <Drawer.Screen name="demo" component={DemoScreen} />
+      <Drawer.Screen name="home" component={HomeScreen} />
+    </Drawer.Navigator>
   )
 }
 
