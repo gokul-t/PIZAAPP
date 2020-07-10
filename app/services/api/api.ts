@@ -1,13 +1,15 @@
 import { ApisauceInstance, create, ApiResponse } from "apisauce"
-import WPAPI from "wpapi";
+import WPAPI, { WPRequest } from "wpapi";
 import { getGeneralApiProblem } from "./api-problem"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import * as Types from "./api.types"
 import * as Models from "../../models"
-
+import * as Utils from "../../utils"
 /**
  * Manages all requests to the API.
  */
+let postsResponse: WPRequest = null;
+
 export class Api {
   /**
    * The underlying apisauce instance which performs the requests.
@@ -16,7 +18,7 @@ export class Api {
   /**
    * The underlying WPAPI instrance which perform the requests
    */
-  wp : WPAPI
+  wp: WPAPI
   /**
    * Configurable options.
    */
@@ -50,9 +52,9 @@ export class Api {
     this.wp = new WPAPI({ endpoint: this.config.url });
   }
 
-    /**
-   * Gets a list of users.
-   */
+  /**
+ * Gets a list of users.
+ */
   async getCategories(): Promise<Types.GetCategoryResult> {
     // make the api call
 
@@ -65,19 +67,67 @@ export class Api {
         link: raw.link,
         slug: raw.slug,
         taxonomy: raw.taxonomy,
-        parent : raw.parent
+        parent: raw.parent
       }
     }
 
     // transform the data into the format we are expecting
     try {
-      const response = await this.wp.categories()
+      const response = await Utils.getAll(this.wp.categories().param("hide_empty", "true").perPage(10));
       const rawCategories = response;
       const resultCategories: Models.CategorySnapshot[] = rawCategories.map(convertCategory)
       return { kind: "ok", categories: resultCategories }
     } catch {
       return { kind: "bad-data" }
     }
+  }
+
+  convertPost = raw => {
+    const featured_media = raw._embedded["wp:featuredmedia"] || [];
+
+    const convertFeaturedMedia = (m) => {
+      return ({
+        medium: m.media_details.sizes.medium.source_url,
+        large: m.media_details.sizes.large.source_url,
+        thumbnail: m.media_details.sizes.thumbnail.source_url,
+        source_url: m.source_url
+      })
+    }
+
+    return {
+      id: String(raw.id),
+      date: raw.date,
+      title: raw.title,
+      status: raw.status,
+      featured_media: featured_media.map(convertFeaturedMedia),
+      categories: raw.categories
+    }
+  }
+  async getPosts({ categoryId }): Promise<Types.GetPostsResult> {
+    try {
+      const request = categoryId ? this.wp.posts().category(categoryId) : this.wp.posts();
+      postsResponse = await request.embed()
+      const rawPosts = postsResponse;
+      const resultPosts: Models.PostSnapshot[] = rawPosts.map(this.convertPost)
+      return { kind: "ok", posts: resultPosts }
+    } catch {
+      return { kind: "bad-data" }
+    }
+  }
+
+  async loadMorePosts(): Promise<Types.GetPostsResult> {
+    if (postsResponse && postsResponse._paging && postsResponse._paging.next) {
+      try {
+        postsResponse = await postsResponse._paging.next;
+        const rawPosts = postsResponse;
+        const resultPosts: Models.PostSnapshot[] = rawPosts.map(this.convertPost)
+        return { kind: "ok", posts: resultPosts }
+      } catch (err) {
+        // alert(err.message)
+        return { kind: "rejected" }
+      }
+    }
+    return { kind: "bad-data" }
   }
 
 

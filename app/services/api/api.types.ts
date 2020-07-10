@@ -1,5 +1,5 @@
 import { GeneralApiProblem } from "./api-problem"
-import { CategorySnapshot } from "../../models"
+import { CategorySnapshot, PostSnapshot } from "../../models"
 
 export interface User {
   id: number
@@ -9,3 +9,4 @@ export interface User {
 export type GetUsersResult = { kind: "ok"; users: User[] } | GeneralApiProblem
 export type GetUserResult = { kind: "ok"; user: User } | GeneralApiProblem
 export type GetCategoryResult = { kind : "ok"; categories : CategorySnapshot[] } | GeneralApiProblem
+export type GetPostsResult = { kind : "ok"; posts : PostSnapshot[] } | GeneralApiProblem

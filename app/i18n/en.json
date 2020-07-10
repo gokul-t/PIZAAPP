@@ -15,6 +15,9 @@
     "readyForLaunch": "Ready for launch.",
     "continue": "CONTINUE"
   },
+  "categoriesScreen":{
+    "title": "Categories"
+  },
   "demoScreen": {
     "howTo": "HOW TO",
     "title": "What’s In This Stack?",

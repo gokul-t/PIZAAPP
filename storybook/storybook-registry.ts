@@ -1,3 +1,5 @@
+require("../app/components/post-card/post-card.story")
+require("../app/components/content-placeholder/content-placeholder.story")
 require("../app/components/text/text.story")
 require("../app/components/button/button.story")
 require("../app/components/form-row/form-row.story")
