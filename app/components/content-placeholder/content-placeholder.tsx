@@ -1,10 +1,21 @@
 import React, { FunctionComponent as Component } from "react"
-import { Text, View } from 'react-native'
+import { Text, View, Alert } from 'react-native'
 import { Placeholder, PlaceholderMedia, PlaceholderLine, Fade } from "rn-placeholder";
 import { observer, useObserver } from "mobx-react-lite"
 // import { useStores } from "../../models"
 import { contentPlaceholderStyles as styles } from "./content-placeholder.styles"
 import ImageLoad from 'react-native-image-placeholder'
+import {
+  ActivityIndicator,
+  Avatar,
+  Button,
+  Card,
+  Subheading,
+  Title,
+  Paragraph,
+  List,
+  Headline,
+} from 'react-native-paper';
 const placeholderImage = require("./thumbnail.png")
 
 export interface ContentPlaceholderProps { }
@@ -15,14 +26,28 @@ export interface ContentPlaceholderProps { }
  * Component description here for TypeScript tips.
  */
 export const CardPlaceholder: Component<ContentPlaceholderProps> = props => {
-  return <Placeholder
-    Animation={Fade}
-  >
-    <PlaceholderLine width={80} />
-    <PlaceholderLine width={30} />
-    <ImageLoad source={placeholderImage}></ImageLoad>
-  </Placeholder>
+  return <Card>
+    <Card.Content>
+      <Placeholder
+        Animation={Fade}
+      // Left={PlaceholderMedia}
+      // Right={PlaceholderMedia}
+      >
+        <PlaceholderLine />
+        <PlaceholderLine width={30} />
+      </Placeholder>
+      <ImageLoad style={{
+        width: '100%',
+        height: 200,
+      }}
+        // borderRadius={12}
+        loadingStyle={{ size: 'small', color: 'gray' }}
+        source={placeholderImage}></ImageLoad>
+    </Card.Content>
+  </Card>
 }
+const ten = new Array(10).fill(0);
+
 export const ContentPlaceholder: Component<ContentPlaceholderProps> = React.memo(props => {
   // Note: if you want your componeobservernt to refresh when data is updated in the store,
   // wrap this component in `` like so:
@@ -32,10 +57,9 @@ export const ContentPlaceholder: Component<ContentPlaceholderProps> = React.memo
   // const rootStore = useStores()
   // or
   // const { otherStore, userStore } = useStores()
-  const ten = new Array(10).fill(0);
   return <>
-    <View style={{ marginTop: 23, padding: 33 }}>
-      { ten.map(()=><CardPlaceholder></CardPlaceholder>) }
+    <View>
+      {ten.map((k, i) => <CardPlaceholder key={i.toString()}></CardPlaceholder>)}
     </View>
   </>;
 })

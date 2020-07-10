@@ -1,6 +1,6 @@
 import React, { FunctionComponent as Component, useCallback } from "react"
 import ImageLoad from 'react-native-image-placeholder';
-import { View } from "react-native"
+import { View, TouchableOpacity } from "react-native"
 import {
   ActivityIndicator,
   Avatar,
@@ -19,7 +19,8 @@ import { postCardStyles as styles } from "./post-card.styles"
 const placeholderImage = require("../content-placeholder/thumbnail.png")
 
 export interface PostCardProps {
-  item: any
+  item: any,
+  onPress:any 
 }
 
 const getImageUrl = i => {
@@ -43,28 +44,31 @@ export const PostCard: Component<PostCardProps> = React.memo(props => {
   // const rootStore = useStores()
   // or
   // const { otherStore, userStore } = useStores()
-  const { item } = props;
+  const { item , onPress } = props;
 
   const imageUrl = getImageUrl(item);
-  return <Card style={styles.CARD}>
-    <Card.Content>
-      <Subheading>{item.title.rendered}</Subheading>
-    </Card.Content>
-    <ImageLoad
-      style={{
-        width: '100%',
-        height: 200,
-      }}
-      // borderRadius={12}
-      loadingStyle={{ size: 'small', color: 'gray' }}
-      source={imageUrl ? {
-        uri: imageUrl
-      } : placeholderImage}
-    />
-    {/* <Card.Cover
+
+  return <TouchableOpacity onPress={onPress}>
+    <Card style={styles.CARD}>
+      <Card.Content>
+        <Subheading>{item.title.rendered}</Subheading>
+      </Card.Content>
+      <ImageLoad
+        style={{
+          width: '100%',
+          height: 200,
+        }}
+        // borderRadius={12}
+        loadingStyle={{ size: 'small', color: 'gray' }}
+        source={imageUrl ? {
+          uri: imageUrl
+        } : placeholderImage}
+      />
+      {/* <Card.Cover
       source={imageUrl ? {
         uri: imageUrl
       } : placeholderImage}
     /> */}
-  </Card>
+    </Card>
+  </TouchableOpacity>
 })

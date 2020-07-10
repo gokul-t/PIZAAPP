@@ -7,7 +7,8 @@ import { CategoryModel, Category } from "../category/category"
 export const CategoryStoreModel = types
 .model("CategoryStore")
 .props({
-  categories : types.optional(types.array(CategoryModel),[])
+  categories : types.optional(types.array(CategoryModel),[]),
+  refreshing:types.optional(types.boolean,false)
 })
 .extend(withEnvironment) 
 .views(self=>({})) // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -19,12 +20,14 @@ export const CategoryStoreModel = types
 }))
 .actions(self=>({
   getCategories: flow(function *(){
+    self.refreshing = true;
     const result = yield self.environment.api.getCategories()
     if(result.kind === "ok"){
       self.saveCategories(result.categories)
     }else{
       __DEV__ && console.tron.log(result.kind);
     }
+    self.refreshing = false;
   })
 }))
 

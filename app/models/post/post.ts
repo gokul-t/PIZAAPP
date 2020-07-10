@@ -20,6 +20,7 @@ export const PostModel = types
     id: types.identifier,
     date: types.string,
     title: RenderModel,
+    content : RenderModel,
     status: types.string,
     featured_media: types.optional(types.array(FeaturedMediaModel), []),
     categories: types.array(types.integer),

@@ -8,6 +8,7 @@ import { PostModel, Post } from "../post/post"
 export const PostStoreModel = types
   .model("PostStore")
   .props({
+    categoryId : types.maybeNull(types.string),
     refreshing : types.optional(types.boolean,false),
     loading : types.optional(types.boolean,false),
     posts : types.optional(types.array(PostModel),[])
@@ -26,6 +27,8 @@ export const PostStoreModel = types
   }))
   .actions(self => ({
     getPosts : flow(function *({ categoryId }){
+      self.categoryId = categoryId;
+      self.savePosts([])
       self.refreshing = true;
       const result:any = yield self.environment.api.getPosts({ categoryId })
       if(result.kind === "ok"){

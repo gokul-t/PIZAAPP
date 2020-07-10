@@ -27,8 +27,12 @@ const HEADER_TITLE: TextStyle = {
   textAlign: "center",
   letterSpacing: 1.5,
 }
+type CategoriesScreenProps = {
+  refreshing: boolean,
+}
 
-export const CategoriesScreen: Component = observer(function CategoriesScreen() {
+export const CategoriesScreen: Component<CategoriesScreenProps> = observer(function CategoriesScreen(props) {
+  const { refreshing = false } = props;
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   // OR
@@ -36,38 +40,35 @@ export const CategoriesScreen: Component = observer(function CategoriesScreen() 
   // Pull in navigation via hook
   const navigation = useNavigation()
   const goHomeScreen = (item) => navigation.navigate("home", {
-    categoryId: item.id
+    categoryId: item.id,
+    categoryName: item.name
   })
-
-  const [refreshing, setRefreshing] = useState(false)
+  const categories = rootStore.categoryStore.categories;
 
   const fetchCategories = useCallback(() => {
     if (!refreshing) {
-      setRefreshing(true)
       rootStore.categoryStore.getCategories()
-        .then(() => setRefreshing(false))
-        .catch(() => setRefreshing(false))
     }
   }, [refreshing])
 
-  useEffect(() => {
-    fetchCategories()
-  }, [])
-
-  const renderItem = (item) => <TouchableOpacity key={item.id} onPress={() => goHomeScreen(item)}>
+  const renderItem = useCallback((item) => <TouchableOpacity key={item.id} onPress={() => goHomeScreen(item)}>
     <BulletItem text={item.name} />
-  </TouchableOpacity>
+  </TouchableOpacity>, [])
 
-  const renderList = () => {
-    if (rootStore.categoryStore.categories.length === 0) {
+  const renderList = useCallback(() => {
+    if (categories.length === 0) {
       return (
         // <Box center f={1}>
         <Text>Categories Empty</Text>
         // </Box>
       )
     }
-    return rootStore.categoryStore.categories.map(renderItem)
-  }
+    return categories.map(renderItem)
+  }, [categories])
+
+  useEffect(() => {
+    fetchCategories()
+  }, [])
 
   return (
     <View style={FULL}>

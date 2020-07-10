@@ -32,6 +32,7 @@ type HomeScreenProps = {
     name: string,
     params: {
       categoryId: string
+      categoryName: string
     }
   },
   refreshing: boolean,
@@ -40,7 +41,8 @@ type HomeScreenProps = {
 export const HomeScreen: Component<HomeScreenProps> = observer(function HomeScreen(props) {
   const { route, refreshing = false, loading = false } = props;
   const fetching = refreshing || loading;
-  const categoryId = _.get(route, "params.categoryId");
+  const categoryId = _.get(route, "params.categoryId")
+  const categoryName = _.get(route, "params.categoryName")
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   // OR
@@ -49,42 +51,51 @@ export const HomeScreen: Component<HomeScreenProps> = observer(function HomeScre
   const navigation = useNavigation()
   const goBack = () => navigation.goBack()
   const goCategoryScreen = () => navigation.navigate("categories")
+  const goPostsScreen = (post) => navigation.navigate("posts",{
+    post
+  })
+
   const posts = rootStore.postStore.posts;
+
   const fetchPosts = useCallback(async () => {
     if (!fetching) {
-      await rootStore.postStore.getPosts({ categoryId });
+       rootStore.postStore.getPosts({ categoryId });
     }
-  }, [categoryId, fetching]);
+  }, [categoryId, refreshing, loading]);
 
   const handleLoadMore = useCallback(async () => {
     if (!fetching) {
-      await rootStore.postStore.loadMorePosts();
+      rootStore.postStore.loadMorePosts();
     }
-  }, [categoryId, fetching]);
+  }, [categoryId, refreshing, loading]);
 
   const renderFooter = useCallback(() => {
-    if (loading) return <ContentPlaceholder></ContentPlaceholder>;
+    if (fetching) return <ContentPlaceholder></ContentPlaceholder>;
     return null;
-  }, [loading]);
+  }, [refreshing, loading]);
 
   useEffect(() => {
     fetchPosts();
   }, [categoryId])
 
   const renderItem = useCallback((props) => {
-    return <PostCard key={props.item.id} {...props} />;
+    return <PostCard key={props.item.id} {...props} onPress={()=>goPostsScreen(props.item)}/>;
   }, []);
+  // alert(refreshing)
+  // alert(categoryId)
+  __DEV__ && console.tron.log("category",categoryId);
 
   return (
     <View style={FULL}>
       <Header
-        headerTx="demoScreen.howTo"
+        headerText={categoryId ? categoryName : "Home"}
         leftIcon={categoryId ? "back" : "menu"}
         onLeftPress={categoryId ? goBack : goCategoryScreen}
         style={HEADER}
         titleStyle={HEADER_TITLE}
       />
       <FlatList
+        key={categoryId ? categoryName : "Home"}
         data={posts}
         onRefresh={fetchPosts}
         refreshing={refreshing}
@@ -92,7 +103,8 @@ export const HomeScreen: Component<HomeScreenProps> = observer(function HomeScre
         onEndReachedThreshold={10}
         ListFooterComponent={renderFooter}
         renderItem={renderItem}
-        keyExtractor={(item, index) => item.id}
+        keyExtractor={(item, index) => index.toString()}
+        extraData={posts}
       />
     </View>
   );
