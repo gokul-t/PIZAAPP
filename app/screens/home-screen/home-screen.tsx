@@ -1,5 +1,4 @@
 import React, { FunctionComponent as Component, useEffect, useState, useCallback } from "react"
-import { observer } from "mobx-react-lite"
 import { View, ViewStyle, TextStyle, FlatList, Alert } from 'react-native';
 import _ from "lodash";
 import { useNavigation } from "@react-navigation/native"
@@ -7,6 +6,8 @@ import { BulletItem, Header, Text, Screen, PostCard } from "../../components"
 import { ContentPlaceholder } from "../../components"
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
+import { observer, useObserver } from "mobx-react-lite"
+
 
 const FULL: ViewStyle = {
   flex: 1,
@@ -50,9 +51,9 @@ export const HomeScreen: Component<HomeScreenProps> = observer(function HomeScre
   // Pull in navigation via hook
   const navigation = useNavigation()
   const goBack = () => navigation.goBack()
-  const goCategoryScreen = () => navigation.navigate("categories")
+  const goCategoryScreen = () => navigation.navigate("categoriesTab")
   const goPostsScreen = (post) => navigation.navigate("posts",{
-    post
+    postId: post.id,
   })
 
   const posts = rootStore.postStore.posts;
@@ -100,7 +101,7 @@ export const HomeScreen: Component<HomeScreenProps> = observer(function HomeScre
         onRefresh={fetchPosts}
         refreshing={refreshing}
         onEndReached={handleLoadMore}
-        onEndReachedThreshold={10}
+        onEndReachedThreshold={40}
         ListFooterComponent={renderFooter}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}

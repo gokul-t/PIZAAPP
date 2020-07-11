@@ -6,7 +6,9 @@
  */
 import React from "react"
 import { createStackNavigator } from "@react-navigation/stack"
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { WelcomeScreen, DemoScreen, HomeScreen, PostsScreen, CategoriesScreen } from "../screens"
+import { color, spacing } from "../theme"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -19,36 +21,83 @@ import { WelcomeScreen, DemoScreen, HomeScreen, PostsScreen, CategoriesScreen } 
  * For more information, see this documentation:
  *   https://reactnavigation.org/docs/params/
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
+ * 
  */
-export type PrimaryParamList = {
-  welcome: undefined
-  demo: undefined,
-  home:undefined,
-  posts:undefined,
-  categories:undefined
+
+
+
+export type HomeParamList = {
+  home: undefined,
+  posts: undefined,
+}
+
+export type CategoryParamList = {
+  categories: undefined,
+  categoryHome: undefined
+}
+
+export type TabParamList = {
+  homeTab: undefined
+  categoriesTab: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
-const Stack = createStackNavigator<PrimaryParamList>()
+const HomeStack = createStackNavigator<HomeParamList>()
+const CategoryStack = createStackNavigator<CategoryParamList>()
+const Tab = createBottomTabNavigator<TabParamList>();
 
-export function PrimaryNavigator() {
+
+export function HomeStackNavigator() {
   return (
-    <Stack.Navigator
+    <HomeStack.Navigator
       screenOptions={{
         headerShown: false,
         gestureEnabled: true,
       }}
       initialRouteName="home"
     >
-      <Stack.Screen name="welcome" component={WelcomeScreen} />
-      <Stack.Screen name="demo" component={DemoScreen} />
-      <Stack.Screen name="home" component={HomeScreen} />
-      <Stack.Screen name="posts" component={PostsScreen} />
-      <Stack.Screen name="categories" component={CategoriesScreen} />
-    </Stack.Navigator>
+      {/* <Stack.Screen name="welcome" component={WelcomeScreen} />
+      <Stack.Screen name="demo" component={DemoScreen} /> */}
+      <HomeStack.Screen name="home" component={HomeScreen} />
+      <HomeStack.Screen name="posts" component={PostsScreen} />
+    </HomeStack.Navigator>
   )
 }
 
+export function CategoryStackNavigator() {
+  return (
+    <CategoryStack.Navigator
+      screenOptions={{
+        headerShown: false,
+        gestureEnabled: true,
+      }}
+      initialRouteName="categories"
+    >
+      {/* <Stack.Screen name="welcome" component={WelcomeScreen} />
+      <Stack.Screen name="demo" component={DemoScreen} /> */}
+      {/* <Stack.Screen name="home" component={HomeScreen} />
+      <Stack.Screen name="posts" component={PostsScreen} /> */}
+      <CategoryStack.Screen name="categories" component={CategoriesScreen} />
+      <CategoryStack.Screen name="categoryHome" component={HomeScreen} />
+    </CategoryStack.Navigator>
+  )
+}
+export default function TabsNavigator() {
+  return (
+    <Tab.Navigator tabBarOptions={{
+      activeTintColor: 'tomato',
+      inactiveTintColor: 'gray',
+      activeBackgroundColor : color.palette.black,
+      inactiveBackgroundColor : color.palette.lighterGrey
+    }}>
+      <Tab.Screen name="homeTab" component={HomeStackNavigator} />
+      <Tab.Screen name="categoriesTab" component={CategoryStackNavigator} />
+    </Tab.Navigator>
+  );
+}
+
+
+export const PrimaryNavigator = TabsNavigator;
 /**
  * A list of routes from which we're allowed to leave the app when
  * the user presses the back button on Android.
@@ -58,5 +107,5 @@ export function PrimaryNavigator() {
  *
  * `canExit` is used in ./app/app.tsx in the `useBackButtonHandler` hook.
  */
-const exitRoutes = ["welcome","home"]
+const exitRoutes = ["welcome", "home"]
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)
