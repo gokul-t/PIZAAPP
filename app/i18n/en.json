@@ -7,10 +7,16 @@
   "errors": {
     "invalidEmail": "Invalid email address."
   },
+  "homeScreen" : {
+    "header" : "Home"
+  },
   "welcomeScreen": {
     "poweredBy": "POWERED BY BOWSER",
     "readyForLaunch": "Ready for launch.",
     "continue": "CONTINUE"
+  },
+  "categoriesScreen":{
+    "title": "Categories"
   },
   "demoScreen": {
     "howTo": "HOW TO",
