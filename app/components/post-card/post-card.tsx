@@ -13,7 +13,7 @@ import {
   Headline,
 } from 'react-native-paper';
 import { Text } from "../"
-// import { observer } from "mobx-react-lite"
+import { observer } from "mobx-react-lite"
 // import { useStores } from "../../models"
 import { postCardStyles as styles } from "./post-card.styles"
 const placeholderImage = require("../content-placeholder/thumbnail.png")
@@ -35,7 +35,7 @@ const getImageUrl = i => {
  *
  * Component description here for TypeScript tips.
  */
-export const PostCard: Component<PostCardProps> = React.memo(props => {
+export const PostCard: Component<PostCardProps> = React.memo(observer(props => {
   // Note: if you want your componeobservernt to refresh when data is updated in the store,
   // wrap this component in `` like so:
   // `export const PostCard = observer(function PostCard { ... })`
@@ -71,4 +71,4 @@ export const PostCard: Component<PostCardProps> = React.memo(props => {
     /> */}
     </Card>
   </TouchableOpacity>
-})
+}))

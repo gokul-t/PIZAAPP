@@ -39,7 +39,7 @@ export const CategoriesScreen: Component<CategoriesScreenProps> = observer(funct
   const rootStore = useStores()
   // Pull in navigation via hook
   const navigation = useNavigation()
-  const goHomeScreen = (item) => navigation.navigate("home", {
+  const goCategoryHomeScreen = (item) => navigation.navigate("categoryHome", {
     categoryId: item.id,
     categoryName: item.name
   })
@@ -51,7 +51,7 @@ export const CategoriesScreen: Component<CategoriesScreenProps> = observer(funct
     }
   }, [refreshing])
 
-  const renderItem = useCallback((item) => <TouchableOpacity key={item.id} onPress={() => goHomeScreen(item)}>
+  const renderItem = useCallback((item) => <TouchableOpacity key={item.id} onPress={() => goCategoryHomeScreen(item)}>
     <BulletItem text={item.name} />
   </TouchableOpacity>, [])
 

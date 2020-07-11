@@ -15,7 +15,7 @@ type PostsScreenProps = {
     key:string
     name : string,
     params : {
-      post :any
+      postId :string
     }
   }
 }
@@ -24,11 +24,12 @@ export const PostsScreen: Component<PostsScreenProps> = observer(function PostsS
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   // OR
-  const { post } = props.route.params;
-  // const rootStore = useStores()
+  const { postId } = props.route.params;
+  const rootStore = useStores()
   // Pull in navigation via hook
   const navigation = useNavigation()
   const goBack = () => navigation.goBack()
+  const post = rootStore.postStore.posts.find(p=>p.id===postId)
   return (
     <Screen style={ROOT} preset="scroll">
       <Header
