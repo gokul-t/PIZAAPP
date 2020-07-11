@@ -33,7 +33,8 @@ export type HomeParamList = {
 
 export type CategoryParamList = {
   categories: undefined,
-  categoryHome: undefined
+  categoryHome: undefined,
+  categoryPost:undefined
 }
 
 export type TabParamList = {
@@ -59,7 +60,7 @@ export function HomeStackNavigator() {
       {/* <Stack.Screen name="welcome" component={WelcomeScreen} />
       <Stack.Screen name="demo" component={DemoScreen} /> */}
       <HomeStack.Screen name="home" component={HomeScreen} />
-      <HomeStack.Screen name="posts" component={PostsScreen} />
+      <HomeStack.Screen name="posts" component={PostsScreen} />      
     </HomeStack.Navigator>
   )
 }
@@ -79,6 +80,7 @@ export function CategoryStackNavigator() {
       <Stack.Screen name="posts" component={PostsScreen} /> */}
       <CategoryStack.Screen name="categories" component={CategoriesScreen} />
       <CategoryStack.Screen name="categoryHome" component={HomeScreen} />
+      <CategoryStack.Screen name="categoryPost" component={PostsScreen} />
     </CategoryStack.Navigator>
   )
 }

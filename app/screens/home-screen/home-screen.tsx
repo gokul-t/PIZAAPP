@@ -52,7 +52,7 @@ export const HomeScreen: Component<HomeScreenProps> = observer(function HomeScre
   const navigation = useNavigation()
   const goBack = () => navigation.goBack()
   const goCategoryScreen = () => navigation.navigate("categoriesTab")
-  const goPostsScreen = (post) => navigation.navigate("posts",{
+  const goPostsScreen = (post) => navigation.navigate(categoryId ? "categoryPost" : "posts", {
     postId: post.id,
   })
 
@@ -60,7 +60,7 @@ export const HomeScreen: Component<HomeScreenProps> = observer(function HomeScre
 
   const fetchPosts = useCallback(async () => {
     if (!fetching) {
-       rootStore.postStore.getPosts({ categoryId });
+      rootStore.postStore.getPosts({ categoryId });
     }
   }, [categoryId, refreshing, loading]);
 
@@ -80,11 +80,11 @@ export const HomeScreen: Component<HomeScreenProps> = observer(function HomeScre
   }, [categoryId])
 
   const renderItem = useCallback((props) => {
-    return <PostCard key={props.item.id} {...props} onPress={()=>goPostsScreen(props.item)}/>;
+    return <PostCard key={props.item.id} {...props} onPress={() => goPostsScreen(props.item)} />;
   }, []);
   // alert(refreshing)
   // alert(categoryId)
-  __DEV__ && console.tron.log("category",categoryId);
+  __DEV__ && console.tron.log("category", categoryId);
 
   return (
     <View style={FULL}>
@@ -101,7 +101,7 @@ export const HomeScreen: Component<HomeScreenProps> = observer(function HomeScre
         onRefresh={fetchPosts}
         refreshing={refreshing}
         onEndReached={handleLoadMore}
-        onEndReachedThreshold={40}
+        onEndReachedThreshold={10}
         ListFooterComponent={renderFooter}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}

@@ -12,10 +12,10 @@ const ROOT: ViewStyle = {
 }
 type PostsScreenProps = {
   route: {
-    key:string
-    name : string,
-    params : {
-      postId :string
+    key: string
+    name: string,
+    params: {
+      postId: string
     }
   }
 }
@@ -29,17 +29,19 @@ export const PostsScreen: Component<PostsScreenProps> = observer(function PostsS
   // Pull in navigation via hook
   const navigation = useNavigation()
   const goBack = () => navigation.goBack()
-  const post = rootStore.postStore.posts.find(p=>p.id===postId)
+  const post = rootStore.postStore.posts.find(p => p.id === postId)
   return (
     <Screen style={ROOT} preset="scroll">
-      <Header
-        headerText={post.title.rendered}
-        leftIcon={ "back" }
-        onLeftPress={ goBack }
+      {post && <>
+        <Header
+          headerText={post.title.rendered}
+          leftIcon={"back"}
+          onLeftPress={goBack}
         // style={HEADER}
         // titleStyle={HEADER_TITLE}
-      />
-      <HtmlView value={post.content.rendered}></HtmlView>
+        />
+        <HtmlView value={post.content.rendered}></HtmlView>
+      </>}
     </Screen>
   )
 })
