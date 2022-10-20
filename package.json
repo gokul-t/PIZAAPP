@@ -48,7 +48,7 @@
     "react-native-image-placeholder": "^1.0.14",
     "react-native-keychain": "^6.1.1",
     "react-native-paper": "^3.10.1",
-    "react-native-reanimated": "~1.9.0",
+    "react-native-reanimated": "~2.10.0",
     "react-native-safe-area-context": "~3.0.7",
     "react-native-safe-area-view": "^1.1.1",
     "react-native-screens": "~2.9.0",
